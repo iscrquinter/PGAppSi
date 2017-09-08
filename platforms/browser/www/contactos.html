@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
@@ -7,10 +6,11 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-    <title>Contactos</title>
+
     <link rel="stylesheet" type="text/css" href="css/jquery.mmenu.all.css" />
     <link rel="stylesheet" type="text/css" href="css/demo.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <title>Mis Contactos</title>
 </head>
 
 <body>
@@ -20,88 +20,210 @@
             Contactos-API
         </div>
         <div class="content">
+
             <ul class="nav nav-tabs">
-                <li class="active">
-                    <a href="#fetch" data-toggle="tab">Fetch</a>
+                <li class="active"><a href="#fetch" data-toggle="tab">Consultar</a>
                 </li>
-                <li>
-                    <a href="#add" data-toggle="tab">Add</a>
+                <li><a href="#add" data-toggle="tab">Agregar</a>
                 </li>
             </ul>
 
             <div class="tab-content" id="tabs">
-                <div id="fetch" class="tab-pane active">
-                    <br />
-                    <button onclick="fetchContacts('');" class="btn btn-info">
-                        Fetch 10 contacts
-                    </button>
-                    <button id="searchName" class="btn btn-info">
-                        Search Name
-                    </button>
-                    <br />
-                    <br />
 
+                <div id="fetch" class="tab-pane active">
+                    <br/>
+                    <button onclick="fetchContacts('');" class="btn btn-info">10 Contactos</button>
+                    <button id="searchName" class="btn btn-info">X Nombre</button>
+                    <br/>
+                    <br/>
                     <div id="status"></div>
+
                     <div id="panel" style="display:none">
                         <div class="list-group">
                             <a href="#" class="list-group-item active">
-                                <h4 class="list-group-item-heading">Total Contacts</h4>
+                                <h4 class="list-group-item-heading">Contacts totales</h4>
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <p id="count" class="list-group-item-text"></p>
                             </a>
                         </div>
+
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Name</th>
-                                    <th>Phone Number</th>
+                                    <th>Nombre</th>
+                                    <th>Teléfono</th>
                                 </tr>
                             </thead>
-                            <tbdoy id="contacts"></tbdoy>
+                            <tbody id="contacts">
+                            </tbody>
                         </table>
+
                     </div>
                 </div>
                 <div id="add" class="tab-pane">
                     <form id="saveForm">
                         <div class="form-group">
-                            <label for="firstName">First Name</label>
-                            <input class="form-control" type="text" od="firstName" placeholder="Enter First Name" />
+                            <label for="firstName">Nombre</label>
+                            <input class="form-control" type="text" id="firstName" placeholder="Captura Nombre" />
                         </div>
                         <div class="form-group">
-                            <label for="lastname">Last Name</label>
-                            <input class="form-control" type="text" id="lastName" placeholder="Enter Last Name" />
+                            <label for="lastName">Apellido</label>
+                            <input class="form-control" type="text" id="lastName" placeholder="Captura Apellido" />
                         </div>
                         <div class="form-group">
-                            <label for="number">Phone Number</label>
-                            <input class="form-control" type="tel" id="number" placeholder="Enter Number" />
+                            <label for="number">Telefono</label>
+                            <input class="form-control" type="tel" id="number" placeholder="Captura Telefono" />
                         </div>
                         <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input class="form-control" type="email" id="email" placeholder="Enter Email" />
+                            <label for="email">Email</label>
+                            <input class="form-control" type="email" id="email" placeholder="Captura Email" />
                         </div>
                         <div class="form-group">
-                            <label for="note">Note</label>
-                            <textarea class="form-control" id="note" placeholder="Enter Notes"></textarea>
+                            <label for="note">Notas</label>
+                            <textarea class="form-control" id="note" placeholder="Captura Notas"></textarea>
                         </div>
                         <div class="form-group">
-                            <input class="btn btn-danger" type="button" name="save" id="saveBtn" value="Save Contact" />
+                            <input class="btn btn-danger" type="button" name="save" id="saveBtn" value="Guardar Contacto" />
                         </div>
+
                     </form>
                 </div>
+				
             </div>
         </div>
-    </div>
 
-    <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="js/jquery.mmenu.min.all.js"></script>
-    <script type="text/javascript" src="js/fastclick.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mmenu.min.all.js"></script>
+        <script type="text/javascript" src="js/fastclick.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
 
-    <script type="text/javascript">
-        $("#openMenu").click(function() {
-            $("#menu").trigger("open.mm");
-        });
-    </script>
+        <script type="text/javascript">
+            $("#searchName").click(function() {
+                $('#status').html("");
+                $('#panel').hide();
+
+                navigator.notification.prompt(
+                    'Texto de búsqueda:',
+                    onPrompt,
+                    'Búsqueda de Contactos', ['Ok', 'Salir'],
+                    ''
+                );
+            });
+
+            $("#saveBtn").click(function() {
+                var firstName = document.getElementById('firstName').value;
+                var lastName = document.getElementById('lastName').value;
+                var fullName = firstName + ' ' + lastName;
+                var number = document.getElementById('number').value;
+                var note = document.getElementById('note').value;
+                var emailAddress = document.getElementById('email').value;
+
+                var theContact = navigator.contacts.create({
+                    "displayName": fullName
+                });
+                theContact.note = note;
+
+                var emails = [];
+                emails[0] = new ContactField('email', emailAddress, false);
+                theContact.emails = emails;
+
+                var phoneNumbers = [];
+                phoneNumbers[0] = new ContactField('work', number, false);
+                phoneNumbers[1] = new ContactField('mobile', number, true); // preferred number
+                phoneNumbers[2] = new ContactField('home', number, false);
+                theContact.phoneNumbers = phoneNumbers;
+
+                theContact.save(onSaveSuccess, onSaveError);
+            });
+
+            function onSaveSuccess(contact) {
+                navigator.notification.alert(
+                    "Contacto Guardado",
+                    null,
+                    'Mis datos-App',
+                    'OK'
+                );
+
+                document.getElementById("saveForm").reset();
+
+            }
+
+            function onSaveError(contactError) {
+                navigator.notification.alert(
+                    "Contacto No Guardado - Error : " + contactError.code,
+                    null,
+                    'Mis datos-App',
+                    'OK'
+                );
+            }
+
+            function onPrompt(results) {
+                if (results.buttonIndex == 1) {
+                    if (results.input1 == "") {
+                        navigator.notification.alert(
+                            "Texto de busqueda vacio",
+                            null,
+                            'Mis datos-App',
+                            'Vuelve a intentar'
+                        );
+                    } else {
+                        fetchContacts(results.input1);
+                    }
+                }
+            }
+
+            function fetchContacts(filter) {
+                $('#panel').hide();
+                $('#status').html("Buscando...espera un momento!");
+
+                var options = new ContactFindOptions();
+                options.filter = filter;
+                options.multiple = true;
+                var fields = ["*"];
+                navigator.contacts.find(fields, onSuccess, onError, options);
+
+
+            };
+
+            function onSuccess(contacts) {
+
+                if (contacts.length == 0) {
+                    $('#panel').hide();
+                    $('#status').html("No hay contactos...");
+                    return;
+                }
+
+                var text = "";
+
+                var totalCount = 0;
+
+                for (var i = 0; i < contacts.length; i++) {
+                    if (totalCount > 9) {
+                        break;
+                    }
+
+                    if (contacts[i].phoneNumbers) {
+                        totalCount++;
+                        for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
+                            text = text + '<tr><td>' + totalCount + "</td><td>" + contacts[i].displayName + "</td><td>" + contacts[i].phoneNumbers[j].value + "</td></tr>";
+                        }
+                    }
+                }
+
+                $('#contacts').html(text);
+                $('#count').html(contacts.length);
+                $('#status').html("");
+                $('#panel').show();
+            }
+
+            function onError(contactError) {
+                alert(contactError);
+            }
+        </script>
 </body>
 
 </html>
